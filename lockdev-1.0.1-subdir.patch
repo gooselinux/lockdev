@@ -1,0 +1,24 @@
+--- lockdev-1.0.1/src/lockdev.c.subdir	2005-02-23 12:57:52.253199688 +0100
++++ lockdev-1.0.1/src/lockdev.c	2005-02-23 13:08:27.193674064 +0100
+@@ -245,10 +245,19 @@
+ 	char * name;
+ 	const char * dev;
+ {
+-	int l;
+-	_debug( 3, "_dl_filename_2 (dev=%s)\n", dev);
++	int l, x;
++	char *p;
++	
+ 	/* lockfile of type /var/lock/LCK..ttyS2 */
++	_debug( 3, "_dl_filename_2 (dev=%s)\n", dev);
++	x = strlen(LOCK_PATH) + 6;	/* 6= strlen("/LCK..") */
+ 	l = sprintf( name, "%s/LCK..%s", LOCK_PATH, dev);
++	
++	/* replace '/' by '_' for /dev sub-dirs (like pppd does it)
++	 */
++	while ((p = strchr(name+x, '/')) != NULL) {
++	    *p = '_';
++	}
+ 	_debug( 2, "_dl_filename_2 () -> len=%d, name=%s<\n", l, name);
+ 	return l;
+ }

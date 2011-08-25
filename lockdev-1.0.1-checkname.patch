@@ -1,0 +1,28 @@
+--- lockdev-1.0.1/src/lockdev.c.orig	2003-08-18 17:13:31.000000000 -0400
++++ lockdev-1.0.1/src/lockdev.c	2003-08-18 17:13:43.000000000 -0400
+@@ -487,17 +487,18 @@
+ 	 * maybe we should check it and do something if not?
+ 	 */
+ 	p = devname;	/* only a filename */
+-	while ( (m=strrchr( p, '/')) != 0 ) {
+-		p = m+1;	/* was pointing to the slash */
++	p += strspn(p, " \t\r\n\v\f\a");        /* skip leading whitespace */
++	if (strncmp(p, DEV_PATH, strlen(DEV_PATH)) == 0) {
++		p += strlen(DEV_PATH);	/* 1st char after slash */
+ 		_debug( 3, "_dl_check_devname(%s) name = %s\n", devname, p);
+ 		if ( strcmp( p, "tty") == 0 ) 
+ 			p = ttyname( 0); /* this terminal, if it exists */
+ 	}
+-	if ( ((l=strlen( p)) == 0 ) || ( l > (MAXPATHLEN - strlen(LOCK_PATH)) ))
+-	 	return 0;
+-	if ( ! (m = malloc( 1 + l)) )
+-		return 0;
+-	return strcpy( m, p);
++	if (((l = strlen(p)) == 0) || (l > (MAXPATHLEN - strlen(LOCK_PATH))))
++	 	return NULL;
++	if ((m = malloc(++l)) == NULL)
++		return NULL;
++	return strcpy(m, p);
+ }
+ 
+ 

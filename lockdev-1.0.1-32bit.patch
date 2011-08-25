@@ -1,0 +1,20 @@
+--- lockdev-1.0.1/src/lockdev.c.32bit	2005-09-21 11:23:36.000000000 +0200
++++ lockdev-1.0.1/src/lockdev.c	2005-09-21 11:55:22.000000000 +0200
+@@ -228,13 +228,13 @@
+ 	_debug( 3, "_dl_filename_1 (stat=%d)\n", (int)st->st_rdev);
+ #if defined (__linux__)
+ 	/* this changes the major from 5 to 4 if it was a cua device */
+-	if ( (int)st->st_rdev >= (TTYAUX_MAJOR*256)+64
+-			&& (int)st->st_rdev <= (TTYAUX_MAJOR*256)+127 )
+-		add = (TTY_MAJOR - TTYAUX_MAJOR)*256;
++	if ( (int)st->st_rdev >= makedev(TTYAUX_MAJOR,64)
++			&& (int)st->st_rdev <= makedev(TTYAUX_MAJOR,127))
++		add = makedev((TTY_MAJOR - TTYAUX_MAJOR),0);
+ #endif /* __linux__ */
+ 	/* lockfile of type /var/lock/LCK.004.064 */
+ 	l = sprintf( name, "%s/LCK.%03d.%03d", LOCK_PATH,
+-		(int)MAJOR( add+st->st_rdev), (int)MINOR( add+st->st_rdev));
++		(int)major(add+st->st_rdev), (int)minor(add+st->st_rdev));
+ 	_debug( 2, "_dl_filename_1 () -> len=%d, name=%s<\n", l, name);
+ 	return l;
+ }

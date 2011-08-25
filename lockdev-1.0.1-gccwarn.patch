@@ -1,0 +1,21 @@
+diff -up lockdev-1.0.1/src/sample.c.kzak lockdev-1.0.1/src/sample.c
+--- lockdev-1.0.1/src/sample.c.kzak	2008-10-06 11:29:48.000000000 +0200
++++ lockdev-1.0.1/src/sample.c	2008-10-06 11:30:26.000000000 +0200
+@@ -1,4 +1,8 @@
+ #include <stdio.h>
++#include <stdlib.h>
++#include <sys/types.h>
++#include <unistd.h>
++
+ #include "lockdev.h"
+ 
+ void
+@@ -13,7 +17,7 @@ int debug;
+ int
+ main(int argc, char *argv[])
+ {
+-	int i, chld;
++	int i;
+ 	char *p = NULL, *dev = NULL, ch;
+ 
+ 	ch = '\0';
